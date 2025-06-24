@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pythonanywhere-mcp-server"
+version = "0.0.1"
+description = "PythonAnywhere Model Context Protocol Server"
+authors = [
+    {name = "PythonAnywhere Developers", email = "developers@pythonanywhere.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pythonanywhere-core",
+    "mcp[cli]",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Utilities",
+]
+license = "MIT"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-mock",
+]
+
+[project.scripts]
+pythonanywhere-mcp-server = "pythonanywhere_mcp_server.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/pythonanywhere/pythonanywhere-mcp-server"
+Repository = "https://github.com/pythonanywhere/pythonanywhere-mcp-server"
+Documentation = "https://github.com/pythonanywhere/pythonanywhere-mcp-server#readme"
+Issues = "https://github.com/pythonanywhere/pythonanywhere-mcp-server/issues"
+Changelog = "https://github.com/pythonanywhere/pythonanywhere-mcp-server/releases"
+
+[tool.pytest.ini_options]
+pythonpath = ["src/pythonanywhere_mcp_server"]

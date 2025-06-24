@@ -1,0 +1,47 @@
+{
+  "dxt_version": "0.1",
+  "name": "PythonAnywhere MCP Server",
+  "description": "Manage files, websites, and scheduled tasks on PythonAnywhere via the Model Context Protocol.",
+  "icon": "icon.png",
+  "version": "0.0.1",
+  "author": {
+    "name": "PythonAnywhere Developers",
+    "email": "developers@pythonanywhere.com"
+  },
+  "main": "pythonanywhere_mcp_server.py",
+  "categories": [
+    "developer-tools",
+    "utilities"
+  ],
+  "license": "MIT",
+  "permissions": [
+    "mcp",
+    "filesystem"
+  ],
+  "user_config": {
+    "pa_api_token": {
+      "type": "string",
+      "title": "PythonAnywhere API Token",
+      "description": "Your PythonAnywhere API token",
+      "required": true
+    },
+    "pa_username": {
+      "type": "string",
+      "title": "PythonAnywhere Username",
+      "description": "Your PythonAnywhere username",
+      "required": true
+    }
+  },
+  "server": {
+    "type": "binary",
+    "entry_point": "pythonanywhere_mcp_server.py",
+    "mcp_config": {
+      "command": "uvx",
+      "args": ["pythonanywhere-mcp-server"],
+      "env": {
+        "API_TOKEN": "${user_config.pa_api_token}",
+        "LOGNAME": "${user_config.pa_username}"
+      }
+    }
+  }
+}
