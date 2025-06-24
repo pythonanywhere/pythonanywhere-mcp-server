@@ -1,0 +1,10 @@
+[project]
+name = "pythonanywhere-mcp-server"
+version = "0.0.1"
+description = "PythonAnywhere Model Context Protocol Server"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pythonanywhere-core",
+    "mcp[cli]",
+]
