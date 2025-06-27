@@ -34,7 +34,7 @@ For GitHub Copilot:
 }
 ```
 
-For Claude Desktop:
+For Claude Desktop and Cursor:
 
 ```json
 {
