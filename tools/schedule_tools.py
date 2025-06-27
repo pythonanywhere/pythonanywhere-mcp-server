@@ -1,13 +1,16 @@
 from pythonanywhere_core.schedule import Schedule
 
+
 def register_tools(mcp):
     @mcp.tool(name="list_scheduled_tasks")
     def list_scheduled_tasks() -> list[dict]:
         """
-        List all scheduled tasks for the current user.
+        List all scheduled tasks for the current user.  Empty list
+        means that there are no scheduled tasks deployed.
 
         Returns:
             list[dict]: List of dictionaries, each representing a scheduled task.
+
         """
         try:
             return Schedule().get_list()
@@ -20,7 +23,7 @@ def register_tools(mcp):
         Create a new scheduled task.
 
         Args:
-            params (dict): Dictionary with required scheduled task specs. Should include:
+            params (dict): Dictionary with required scheduled task specs. Must include:
                 - command (str): The command to run.
                 - enabled (bool): Whether the task is enabled.
                 - interval (str): 'daily' or 'hourly'.
