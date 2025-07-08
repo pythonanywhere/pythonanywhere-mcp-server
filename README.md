@@ -47,9 +47,9 @@ the [desktop extension](https://github.com/anthropics/dxt/) for Claude Desktop.
 ### Claude Code
 Run:
    ```bash
-   claude mcp add pythonanywhere-mcp-server\
-   -e API_TOKEN=yourpythonanywhereapitoken\ 
-   -e LOGNAME=yourpythonanywhereusername\ 
+   claude mcp add pythonanywhere-mcp-server \
+   -e API_TOKEN=yourpythonanywhereapitoken \ 
+   -e LOGNAME=yourpythonanywhereusername \ 
    -- uvx pythonanywhere-mcp-server
    ```
 

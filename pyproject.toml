@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pythonanywhere-mcp-server"
-version = "0.0.1"
+version = "0.0.2"
 description = "PythonAnywhere Model Context Protocol Server"
 authors = [
     {name = "PythonAnywhere Developers", email = "developers@pythonanywhere.com"}
