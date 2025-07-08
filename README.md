@@ -49,7 +49,7 @@ Run:
    ```bash
    claude mcp add pythonanywhere-mcp-server \
    -e API_TOKEN=yourpythonanywhereapitoken \
-   -e LOGNAME=yourpythonanywhereusername \ 
+   -e LOGNAME=yourpythonanywhereusername \
    -- uvx pythonanywhere-mcp-server
    ```
 

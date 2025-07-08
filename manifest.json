@@ -3,7 +3,7 @@
   "name": "PythonAnywhere MCP Server",
   "description": "Manage files, websites, and scheduled tasks on PythonAnywhere via the Model Context Protocol.",
   "icon": "icon.png",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": {
     "name": "PythonAnywhere Developers",
     "email": "developers@pythonanywhere.com"
