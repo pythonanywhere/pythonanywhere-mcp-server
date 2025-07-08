@@ -6,7 +6,7 @@ server acts as a bridge between AI-powered tools and your
 programmatic management of files, websites, webapps, and scheduled tasks. By 
 exposing a standardized interface, it allows language models and automation 
 clients to perform operations—such as editing files, deploying web apps, or 
-scheduling jobs—on your behalf, all while maintaining fine-grained control
+scheduling jobs -- on your behalf, all while maintaining fine-grained control
 and auditability.
 
 ## Features
@@ -18,13 +18,13 @@ and auditability.
   documentation](https://help.pythonanywhere.com/pages/ASGICommandLine))_
 - **WSGI Web app management**: Reload only _(at the moment)_.
 - **Scheduled task management**: List, create, update, and delete.
-  _(Npote that it enables LLMs to execute arbitrary commands if a task is 
-  scheduled to soon after creation and deleted after execution. For that we  
+  _(Note that this enables LLMs to execute arbitrary commands if a task is 
+  scheduled to soon after creation and deleted after execution. For that we 
   would suggest running it with [mcp-server-time](https://pypi.org/project/mcp-server-time/)
   as models easily get confused about time.)_
 
 ## Installation
-MCP protocol is well-defined and supported by various clients, but 
+The MCP protocol is well-defined and supported by various clients, but 
 installation is different depending on the client you are using. We will 
 cover cases that we tried and tested.
 
@@ -100,14 +100,14 @@ maintaining human oversight, especially for sensitive actions such as
 modifying or deleting files.
 
 If you are running multiple MCP servers simultaneously, be 
-cautious—particularly if any server can access external resources you do not
+cautious -- particularly if any server can access external resources you do not
 control, such as GitHub issues. These can become attack vectors. For more 
 details, see [this story](https://simonwillison.net/2025/Jul/6/supabase-mcp-lethal-trifecta/).
 
 ## Implementation
 
-Server uses [python mcp sdk](https://github.com/modelcontextprotocol/python-sdk) 
-in connection with [pythonanywhere-core](https://github.com/pythonanywhere/pythonanywhere-core) 
-package ([docs](https://core.pythonanywhere.com/)) that wraps subset of [PythonAnywhere 
-API](https://help.pythonanywhere.com/pages/API/) and would be expanded in 
+The server uses the [python mcp sdk](https://github.com/modelcontextprotocol/python-sdk) 
+in connection with the [pythonanywhere-core](https://github.com/pythonanywhere/pythonanywhere-core) 
+package ([docs](https://core.pythonanywhere.com/)), which wraps a subset of the [PythonAnywhere 
+API](https://help.pythonanywhere.com/pages/API/) and may be expanded in 
 the future as needed.
