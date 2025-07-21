@@ -37,11 +37,14 @@ def register_website_tools(mcp: FastMCP) -> None:
         Return info dictionaries for every ASGI website configured for the current
         user.  Empty list means that there are no websites deployed.
         That would not include WSGI-based web applications,
-        which could be only reloaded with `reload_webapp` tool.
+        which could be only listed with the `list_webapps` tool.
 
 
         Returns:
             List[dict[str, Any]]: List of dictionaries with website information.
+            Empty list if no websites are configured for the user, but there could be
+            still WSGI-based web applications configured that qould be listed with
+            the `list_webapps` tool.
 
         """
         try:
