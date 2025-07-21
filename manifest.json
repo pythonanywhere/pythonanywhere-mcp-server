@@ -8,16 +8,7 @@
     "name": "PythonAnywhere Developers",
     "email": "developers@pythonanywhere.com"
   },
-  "main": "pythonanywhere_mcp_server.py",
-  "categories": [
-    "developer-tools",
-    "utilities"
-  ],
   "license": "MIT",
-  "permissions": [
-    "mcp",
-    "filesystem"
-  ],
   "user_config": {
     "pa_api_token": {
       "type": "string",
