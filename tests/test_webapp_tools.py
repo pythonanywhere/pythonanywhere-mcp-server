@@ -1,6 +1,7 @@
 import pytest
 from pathlib import Path
 from pythonanywhere_core.base import AuthenticationError
+from pythonanywhere_core.exceptions import MissingCNAMEException
 
 import tools.webapp as webapp_tools
 
@@ -118,3 +119,13 @@ def test_list_webapps(setup_webapp_tools, mocker):
     mocker.patch("tools.webapp.Webapp.list_webapps", return_value=expected)
     result = setup_webapp_tools.call_tool("list_webapps", {})
     assert result == expected
+
+
+def test_reload_webapp_handles_missing_cname_exception(setup_webapp_tools, mocker):
+    mock_webapp = mocker.patch("tools.webapp.Webapp", autospec=True)
+    mock_webapp.return_value.reload.side_effect = MissingCNAMEException()
+
+    result = setup_webapp_tools.call_tool("reload_webapp", {"domain": "test.com"})
+
+    assert "Webapp 'test.com' reloaded" in result
+    assert "CNAME" in result or "cname" in result

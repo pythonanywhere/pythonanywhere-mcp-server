@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.13"
 
 [[package]]
@@ -369,22 +369,21 @@ wheels = [
 
 [[package]]
 name = "pythonanywhere-core"
-version = "0.2.5"
+version = "0.2.9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "python-dateutil" },
     { name = "requests" },
-    { name = "snakesay" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8e/8e/863cb1d09b2850b19913023d4b18d635f4e281fcd25bb4cd77c97a3edcf4/pythonanywhere_core-0.2.5.tar.gz", hash = "sha256:2b43d726c18e5972a01bdfe09482c72dad20325fc3196c7504f4d90acaf642c0", size = 9169, upload-time = "2025-07-16T16:42:16.585Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5d/50/c56765f8a26a7f282680b5f0f7b0aee4ee606a64ff3b4f9bbfe146044170/pythonanywhere_core-0.2.9.tar.gz", hash = "sha256:d8c55423023b359efb2f673452cfd085dccf179fad7f3c02812919baa6c83a49", size = 9682, upload-time = "2025-11-14T18:21:52.777Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/af/22/7f8e30f2ff3bcc46af95e717e5167b12e9c5fa9681a089801c08582227c9/pythonanywhere_core-0.2.5-py3-none-any.whl", hash = "sha256:076aca292b7fddeb276a37a7f25a58223cf249dee8c180b384ee12a5270836e1", size = 12594, upload-time = "2025-07-16T16:42:15.595Z" },
+    { url = "https://files.pythonhosted.org/packages/79/cc/e0cb393b4cf0f3abefb48bd684dc787248f92f1a847ec61ab29196f07e43/pythonanywhere_core-0.2.9-py3-none-any.whl", hash = "sha256:4aeef17f0affc5d2d2b7d216d23ea96f6c4d5152b643f889544d0d9bea511961", size = 13581, upload-time = "2025-11-14T18:21:51.821Z" },
 ]
 
 [[package]]
 name = "pythonanywhere-mcp-server"
-version = "0.0.5"
+version = "0.0.7"
 source = { editable = "." }
 dependencies = [
     { name = "mcp", extra = ["cli"] },
@@ -402,7 +401,7 @@ requires-dist = [
     { name = "mcp", extras = ["cli"] },
     { name = "pytest", marker = "extra == 'test'" },
     { name = "pytest-mock", marker = "extra == 'test'" },
-    { name = "pythonanywhere-core" },
+    { name = "pythonanywhere-core", specifier = ">=0.2.9" },
 ]
 provides-extras = ["test"]
 
@@ -538,15 +537,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81", size = 34031, upload-time = "2024-12-04T17:35:28.174Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274", size = 11050, upload-time = "2024-12-04T17:35:26.475Z" },
-]
-
-[[package]]
-name = "snakesay"
-version = "0.10.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ba/dc/a50f3b2ae1c3d53478eb6fdd4f184d5e9d3394c6e2fe43e7a7c3d96ff090/snakesay-0.10.3.tar.gz", hash = "sha256:6346aa7231b1970efc6fa8b3ea78bd015b3d5a7e33ba709c17e00bcc3328f93f", size = 2679, upload-time = "2024-11-15T17:43:12.19Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/ef/5b36b6188245a38677badab17e8ee056ed3ad0b0334e8004193940de32ef/snakesay-0.10.3-py3-none-any.whl", hash = "sha256:0a601a0c408deba05a20b11ba2f0db336b1915274601053ef8de3a6b354c60fc", size = 3230, upload-time = "2024-11-15T17:43:10.86Z" },
 ]
 
 [[package]]

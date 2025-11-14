@@ -25,15 +25,30 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
 
-      - name: Check tag matches pyproject.toml version
+      - name: Check tag matches version files
         run: |
           TAG_VERSION="${GITHUB_REF##*/}"
           TAG_VERSION_NO_PREFIX="${TAG_VERSION#v}"
           echo "Tag version: $TAG_VERSION (stripped: $TAG_VERSION_NO_PREFIX)"
+
           PYPROJECT_VERSION=$(grep '^version =' pyproject.toml | sed 's/version = "\(.*\)"/\1/')
           echo "pyproject.toml version: $PYPROJECT_VERSION"
+
+          INIT_VERSION=$(grep '^__version__ =' src/pythonanywhere_mcp_server/__init__.py | sed 's/__version__ = "\(.*\)"/\1/')
+          echo "__init__.py version: $INIT_VERSION"
+
           if [ "$TAG_VERSION_NO_PREFIX" != "$PYPROJECT_VERSION" ]; then
             echo "Tag version ($TAG_VERSION_NO_PREFIX) does not match pyproject.toml version ($PYPROJECT_VERSION)" >&2
+            exit 1
+          fi
+
+          if [ "$TAG_VERSION_NO_PREFIX" != "$INIT_VERSION" ]; then
+            echo "Tag version ($TAG_VERSION_NO_PREFIX) does not match __init__.py version ($INIT_VERSION)" >&2
+            exit 1
+          fi
+
+          if [ "$PYPROJECT_VERSION" != "$INIT_VERSION" ]; then
+            echo "pyproject.toml version ($PYPROJECT_VERSION) does not match __init__.py version ($INIT_VERSION)" >&2
             exit 1
           fi
         shell: bash

@@ -4,6 +4,7 @@ from mcp.server.fastmcp import FastMCP
 
 from pythonanywhere_core.webapp import Webapp
 from pythonanywhere_core.base import AuthenticationError, NoTokenError
+from pythonanywhere_core.exceptions import MissingCNAMEException
 
 # ToDo: Add the log file functions once pythonanywhere-core webapp log file functions
 # have been improved
@@ -28,6 +29,8 @@ def register_webapp_tools(mcp: FastMCP) -> None:
         try:
             Webapp(domain).reload()
             return f"Webapp '{domain}' reloaded."
+        except MissingCNAMEException as exc:
+            return f"Webapp '{domain}' reloaded. Note: {str(exc)}"
         except (AuthenticationError, NoTokenError):
             raise RuntimeError("Authentication failed — check API_TOKEN and domain.")
         except Exception as exc:

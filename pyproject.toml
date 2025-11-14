@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pythonanywhere-mcp-server"
-version = "0.0.6"
+version = "0.0.7"
 description = "PythonAnywhere Model Context Protocol Server"
 authors = [
     {name = "PythonAnywhere Developers", email = "developers@pythonanywhere.com"}
@@ -12,7 +12,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "pythonanywhere-core",
+    "pythonanywhere-core>=0.2.9",
     "mcp[cli]",
 ]
 classifiers = [
