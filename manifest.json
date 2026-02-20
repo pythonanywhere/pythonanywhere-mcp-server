@@ -21,6 +21,12 @@
       "title": "PythonAnywhere Username",
       "description": "Your PythonAnywhere username",
       "required": true
+    },
+    "pa_site": {
+      "type": "string",
+      "title": "PythonAnywhere Site",
+      "description": "Set to eu.pythonanywhere.com if your account is on the EU site (defaults to www.pythonanywhere.com)",
+      "required": false
     }
   },
   "server": {
@@ -31,7 +37,8 @@
       "args": ["pythonanywhere-mcp-server"],
       "env": {
         "API_TOKEN": "${user_config.pa_api_token}",
-        "LOGNAME": "${user_config.pa_username}"
+        "PYTHONANYWHERE_USERNAME": "${user_config.pa_username}",
+        "PYTHONANYWHERE_SITE": "${user_config.pa_site}"
       }
     }
   }

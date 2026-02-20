@@ -45,6 +45,27 @@ def register_file_tools(mcp: FastMCP) -> None:
             raise RuntimeError(f"Failed to upload text file: {str(exc)}") from exc
 
     @mcp.tool()
+    def upload_directory(local_dir_path: str, remote_dir_path: str) -> str:
+        """
+        Upload a local directory to PythonAnywhere, preserving directory structure.
+
+        Recursively walks the local directory and uploads each file.
+        Empty directories are preserved.
+
+        Args:
+            local_dir_path (str): The absolute path to the local directory to upload.
+            remote_dir_path (str): The absolute path on PythonAnywhere where the directory will be uploaded.
+
+        Returns:
+            str: Status message indicating upload result.
+        """
+        try:
+            Files().tree_post(local_dir_path, remote_dir_path)
+            return f"Uploaded {local_dir_path} to {remote_dir_path}."
+        except Exception as exc:
+            raise RuntimeError(f"Failed to upload directory: {str(exc)}") from exc
+
+    @mcp.tool()
     def delete_path(path: str) -> str:
         """
         Permanently delete a file or directory (recursively if directory).

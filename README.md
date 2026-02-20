@@ -34,6 +34,10 @@ Have your PythonAnywhere API token and username ready. You can find (or
 generate) your API token in the [API section of your PythonAnywhere
 account](https://www.pythonanywhere.com/account/#api_token).
 
+If your account is on `eu.pythonanywhere.com`, you also need to set
+`PYTHONANYWHERE_SITE` to `eu.pythonanywhere.com` (it defaults to
+`www.pythonanywhere.com`).
+
 ### Desktop Extension - works with Claude Desktop
 Probably the most straightforward way to install the MCP server is to use
 the [desktop extension](https://github.com/anthropics/dxt/) for Claude Desktop.
@@ -49,7 +53,7 @@ Run:
    ```bash
    claude mcp add pythonanywhere-mcp-server \
    -e API_TOKEN=yourpythonanywhereapitoken \
-   -e LOGNAME=yourpythonanywhereusername \
+   -e PYTHONANYWHERE_USERNAME=yourpythonanywhereusername \
    -- uvx pythonanywhere-mcp-server
    ```
 
@@ -65,7 +69,7 @@ Add it to your `mcp.json`.
       "args": ["pythonanywhere-mcp-server"],
       "env": {
         "API_TOKEN": "yourpythonanywhereapitoken",
-        "LOGNAME": "yourpythonanywhereusername"
+        "PYTHONANYWHERE_USERNAME": "yourpythonanywhereusername"
       }
     }
   }
@@ -85,7 +89,7 @@ for Cursor).
       "args": ["pythonanywhere-mcp-server"],
       "env": {
         "API_TOKEN": "yourpythonanywhereapitoken",
-        "LOGNAME": "yourpythonanywhereusername"
+        "PYTHONANYWHERE_USERNAME": "yourpythonanywhereusername"
       }
     }
   }

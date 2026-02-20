@@ -12,7 +12,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "pythonanywhere-core>=0.2.9",
+    "pythonanywhere-core>=0.3.0",
     "mcp[cli]",
 ]
 classifiers = [

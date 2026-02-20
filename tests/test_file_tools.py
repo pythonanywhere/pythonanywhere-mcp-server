@@ -62,6 +62,23 @@ def test_delete_path_exception(mcp, mocker):
     assert "Failed to delete path: delete error" in str(exc)
 
 
+def test_upload_directory(mcp, mocker):
+    file_tools.register_file_tools(mcp)
+    mock_files = mocker.patch("tools.file.Files", autospec=True)
+    result = mcp.call_tool("upload_directory", {"local_dir_path": "/local/myapp", "remote_dir_path": "/home/user/myapp"})
+    mock_files.return_value.tree_post.assert_called_with("/local/myapp", "/home/user/myapp")
+    assert result == "Uploaded /local/myapp to /home/user/myapp."
+
+
+def test_upload_directory_exception(mcp, mocker):
+    file_tools.register_file_tools(mcp)
+    mock_files = mocker.patch("tools.file.Files", autospec=True)
+    mock_files.return_value.tree_post.side_effect = Exception("upload dir error")
+    with pytest.raises(RuntimeError) as exc:
+        mcp.call_tool("upload_directory", {"local_dir_path": "/local/myapp", "remote_dir_path": "/home/user/myapp"})
+    assert "Failed to upload directory: upload dir error" in str(exc)
+
+
 def test_directory_tree(mcp, mocker):
     file_tools.register_file_tools(mcp)
     mock_files = mocker.patch("tools.file.Files", autospec=True)
