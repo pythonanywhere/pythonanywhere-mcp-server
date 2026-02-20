@@ -38,12 +38,12 @@ If your account is on `eu.pythonanywhere.com`, you also need to set
 `PYTHONANYWHERE_SITE` to `eu.pythonanywhere.com` (it defaults to
 `www.pythonanywhere.com`).
 
-### Desktop Extension - works with Claude Desktop
+### MCP Bundle - works with Claude Desktop
 Probably the most straightforward way to install the MCP server is to use
-the [desktop extension](https://github.com/anthropics/dxt/) for Claude Desktop.
+the [MCP Bundle](https://github.com/modelcontextprotocol/mcpb) for Claude Desktop.
 
 1. Open Claude Desktop.
-2. **[Download the latest .dxt file](https://github.com/pythonanywhere/pythonanywhere-mcp-server/releases/latest/download/pythonanywhere-mcp-server.dxt)**.
+2. **[Download the latest .mcpb file](https://github.com/pythonanywhere/pythonanywhere-mcp-server/releases/latest/download/pythonanywhere-mcp-server.mcpb)**.
 3. Double-click on the downloaded .dxt file or drag the file into the window.
 4. Configure your PythonAnywhere API token and username.
 5. Restart Claude Desktop.

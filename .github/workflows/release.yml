@@ -93,17 +93,17 @@ jobs:
         fi
       shell: bash
 
-    - name: Install DXT toolchain
-      run: npm install -g @anthropic-ai/dxt
+    - name: Install MCPB toolchain
+      run: npm install -g @anthropic-ai/mcpb
 
     - name: Pack extension
-      run: dxt pack
+      run: mcpb pack
 
-    - name: Upload DXT artifacts
+    - name: Upload MCPB artifacts
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
-        name: dxt-dist
-        path: '*.dxt'
+        name: mcpb-dist
+        path: '*.mcpb'
 
   create_release:
     runs-on: ubuntu-latest
@@ -115,17 +115,17 @@ jobs:
         name: python-dist
         path: dist/
 
-    - name: Download DXT artifacts
+    - name: Download MCPB artifacts
       uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
       with:
-        name: dxt-dist
+        name: mcpb-dist
         path: ./
 
     - name: Create Release
       uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
       with:
         files: |
-          *.dxt
+          *.mcpb
           dist/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
