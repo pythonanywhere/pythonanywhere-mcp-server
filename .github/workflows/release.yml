@@ -56,19 +56,13 @@ jobs:
       - name: Build package
         run: uv build
 
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-
       - name: Upload Python artifacts
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: python-dist
           path: dist/
 
-  build_extension:
+  build_bundle:
     runs-on: ubuntu-latest
     needs: test
     steps:
@@ -105,9 +99,25 @@ jobs:
         name: mcpb-dist
         path: '*.mcpb'
 
+  publish_pypi:
+    runs-on: ubuntu-latest
+    needs: [build_package, build_bundle]
+    steps:
+    - name: Download Python artifacts
+      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+      with:
+        name: python-dist
+        path: dist/
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
+
   create_release:
     runs-on: ubuntu-latest
-    needs: [build_package, build_extension]
+    needs: publish_pypi
     steps:
     - name: Download Python artifacts
       uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
