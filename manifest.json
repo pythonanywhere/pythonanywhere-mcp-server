@@ -1,19 +1,38 @@
 {
-  "dxt_version": "0.1",
-  "name": "PythonAnywhere MCP Server",
+  "manifest_version": "0.4",
+  "name": "pythonanywhere-mcp-server",
+  "display_name": "PythonAnywhere MCP Server",
   "description": "Manage files, websites, and scheduled tasks on PythonAnywhere via the Model Context Protocol.",
   "icon": "icon.png",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": {
     "name": "PythonAnywhere Developers",
     "email": "developers@pythonanywhere.com"
   },
   "license": "MIT",
+  "server": {
+    "type": "uv",
+    "entry_point": "src/pythonanywhere_mcp_server/__main__.py",
+    "mcp_config": {
+      "env": {
+        "API_TOKEN": "${user_config.pa_api_token}",
+        "PYTHONANYWHERE_USERNAME": "${user_config.pa_username}",
+        "PYTHONANYWHERE_SITE": "${user_config.pa_site}"
+      }
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "linux", "win32"],
+    "runtimes": {
+      "python": ">=3.13"
+    }
+  },
   "user_config": {
     "pa_api_token": {
       "type": "string",
       "title": "PythonAnywhere API Token",
       "description": "Your PythonAnywhere API token",
+      "sensitive": true,
       "required": true
     },
     "pa_username": {
@@ -27,19 +46,6 @@
       "title": "PythonAnywhere Site",
       "description": "Set to eu.pythonanywhere.com if your account is on the EU site (defaults to www.pythonanywhere.com)",
       "required": false
-    }
-  },
-  "server": {
-    "type": "binary",
-    "entry_point": "pythonanywhere_mcp_server.py",
-    "mcp_config": {
-      "command": "uvx",
-      "args": ["pythonanywhere-mcp-server"],
-      "env": {
-        "API_TOKEN": "${user_config.pa_api_token}",
-        "PYTHONANYWHERE_USERNAME": "${user_config.pa_username}",
-        "PYTHONANYWHERE_SITE": "${user_config.pa_site}"
-      }
     }
   }
 }

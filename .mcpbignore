@@ -1,0 +1,8 @@
+*
+
+!manifest.json
+!icon.png
+!pyproject.toml
+!uv.lock
+!src/
+!src/**
