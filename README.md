@@ -9,6 +9,10 @@ clients to perform operations—such as editing files, deploying web apps, or
 scheduling jobs -- on your behalf, all while maintaining fine-grained control
 and auditability.
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/pythonanywhere-pythonanywhere-mcp-server).
+
 ## Features
 - **File management**: Read, upload, delete files and list directory trees.
   _(also enables debugging with direct access to log files, which are just
