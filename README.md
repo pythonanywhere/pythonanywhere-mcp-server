@@ -16,7 +16,8 @@ and auditability.
 - **ASGI Web app management**: Create, delete, reload, and list.
   _(as described in the [PythonAnywhere ASGI
   documentation](https://help.pythonanywhere.com/pages/ASGICommandLine))_
-- **WSGI Web app management**: Reload only _(at the moment)_.
+- **WSGI Web app management**: Create, delete, reload, patch, list, and get
+  info.
 - **Scheduled task management**: List, create, update, and delete.
   _(Note that this enables LLMs to execute arbitrary commands if a task is
   scheduled too soon after creation and deleted after execution. For that we
