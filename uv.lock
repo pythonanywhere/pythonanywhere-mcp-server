@@ -600,7 +600,7 @@ wheels = [
 
 [[package]]
 name = "pythonanywhere-mcp-server"
-version = "0.0.11"
+version = "0.0.12"
 source = { editable = "." }
 dependencies = [
     { name = "mcp", extra = ["cli"] },
@@ -615,7 +615,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "mcp", extras = ["cli"] },
+    { name = "mcp", extras = ["cli"], specifier = "<2.0.0" },
     { name = "pytest", marker = "extra == 'test'" },
     { name = "pytest-mock", marker = "extra == 'test'" },
     { name = "pythonanywhere-core", specifier = ">=0.3.0" },
