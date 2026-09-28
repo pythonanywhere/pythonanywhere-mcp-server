@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 
 from pythonanywhere_core.webapp import Webapp
 from pythonanywhere_core.base import AuthenticationError, NoTokenError
@@ -9,7 +10,7 @@ from pythonanywhere_core.exceptions import MissingCNAMEException
 # ToDo: Add the log file functions once pythonanywhere-core webapp log file functions
 # have been improved
 
-def register_webapp_tools(mcp: FastMCP) -> None:
+def register_webapp_tools(mcp: MCPServer) -> None:
     @mcp.tool()
     def reload_webapp(domain: str) -> str:
         """
@@ -32,9 +33,9 @@ def register_webapp_tools(mcp: FastMCP) -> None:
         except MissingCNAMEException as exc:
             return f"Webapp '{domain}' reloaded. Note: {str(exc)}"
         except (AuthenticationError, NoTokenError):
-            raise RuntimeError("Authentication failed — check API_TOKEN and domain.")
+            raise ToolError("Authentication failed — check API_TOKEN and domain.")
         except Exception as exc:
-            raise RuntimeError(str(exc)) from exc
+            raise ToolError(str(exc)) from exc
 
     @mcp.tool()
     def create_webapp(domain: str, python_version: str, virtualenv_path: str, project_path: str) -> str:
@@ -64,7 +65,7 @@ def register_webapp_tools(mcp: FastMCP) -> None:
             str: Status message indicating creation result.
 
         Raises:
-            RuntimeError: If authentication fails, webapp already exists (and nuke=False),
+            ToolError: If authentication fails, webapp already exists (and nuke=False),
                          or other API errors occur. If 403 error is raised, it may mean that there
                          is already a non-uwsgi-based website. `list_websites` tool can be used to check that.
         """
@@ -78,9 +79,9 @@ def register_webapp_tools(mcp: FastMCP) -> None:
             )
             return f"Webapp '{domain}' created successfully."
         except (AuthenticationError, NoTokenError):
-            raise RuntimeError("Authentication failed — check API_TOKEN and domain.")
+            raise ToolError("Authentication failed — check API_TOKEN and domain.")
         except Exception as exc:
-            raise RuntimeError(str(exc)) from exc
+            raise ToolError(str(exc)) from exc
 
     @mcp.tool()
     def delete_webapp(domain: str) -> str:
@@ -99,15 +100,15 @@ def register_webapp_tools(mcp: FastMCP) -> None:
             str: Status message indicating deletion result.
 
         Raises:
-            RuntimeError: If authentication fails, webapp doesn't exist, or other API errors occur.
+            ToolError: If authentication fails, webapp doesn't exist, or other API errors occur.
         """
         try:
             Webapp(domain).delete()
             return f"Webapp '{domain}' deleted successfully."
         except (AuthenticationError, NoTokenError):
-            raise RuntimeError("Authentication failed — check API_TOKEN and domain.")
+            raise ToolError("Authentication failed — check API_TOKEN and domain.")
         except Exception as exc:
-            raise RuntimeError(str(exc)) from exc
+            raise ToolError(str(exc)) from exc
 
     @mcp.tool()
     def patch_webapp(domain: str, data: dict) -> dict:
@@ -155,15 +156,15 @@ def register_webapp_tools(mcp: FastMCP) -> None:
                 }
 
         Raises:
-            RuntimeError: If authentication fails, webapp doesn't exist, or other API errors occur.
+            ToolError: If authentication fails, webapp doesn't exist, or other API errors occur.
         """
         try:
             result = Webapp(domain).patch(data)
             return result
         except (AuthenticationError, NoTokenError):
-            raise RuntimeError("Authentication failed — check API_TOKEN and domain.")
+            raise ToolError("Authentication failed — check API_TOKEN and domain.")
         except Exception as exc:
-            raise RuntimeError(str(exc)) from exc
+            raise ToolError(str(exc)) from exc
 
     @mcp.tool()
     def list_webapps() -> list:
@@ -186,15 +187,15 @@ def register_webapp_tools(mcp: FastMCP) -> None:
             get_webapp_info: Get detailed information about a specific webapp.
 
         Raises:
-            RuntimeError: If authentication fails or other API errors occur.
+            ToolError: If authentication fails or other API errors occur.
         """
         try:
             result = Webapp.list_webapps()
             return result
         except (AuthenticationError, NoTokenError):
-            raise RuntimeError("Authentication failed — check API_TOKEN.")
+            raise ToolError("Authentication failed — check API_TOKEN.")
         except Exception as exc:
-            raise RuntimeError(str(exc)) from exc
+            raise ToolError(str(exc)) from exc
 
     @mcp.tool()
     def get_webapp_info(domain: str) -> dict:
@@ -226,15 +227,15 @@ def register_webapp_tools(mcp: FastMCP) -> None:
 
 
         Raises:
-            RuntimeError: If authentication fails, webapp doesn't exist, or other API errors occur.
+            ToolError: If authentication fails, webapp doesn't exist, or other API errors occur.
         """
         try:
             result = Webapp(domain).get()
             return result
         except (AuthenticationError, NoTokenError):
-            raise RuntimeError("Authentication failed — check API_TOKEN and domain.")
+            raise ToolError("Authentication failed — check API_TOKEN and domain.")
         except Exception as exc:
-            raise RuntimeError(str(exc)) from exc
+            raise ToolError(str(exc)) from exc
 
 
 

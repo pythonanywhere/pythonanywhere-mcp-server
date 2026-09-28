@@ -1,4 +1,5 @@
 import pytest
+from mcp.server.mcpserver.exceptions import ToolError
 from pathlib import Path
 from pythonanywhere_core.base import AuthenticationError
 from pythonanywhere_core.exceptions import MissingCNAMEException
@@ -50,7 +51,7 @@ def test_webapp_tools_errors(setup_webapp_tools, mocker, tool_name, method_name,
     mock_webapp = mocker.patch("tools.webapp.Webapp", autospec=True)
     getattr(mock_webapp.return_value, method_name).side_effect = side_effect
     
-    with pytest.raises(RuntimeError) as exc:
+    with pytest.raises(ToolError) as exc:
         setup_webapp_tools.call_tool(tool_name, params)
     assert expected_error in str(exc)
 
@@ -63,7 +64,7 @@ def test_list_webapps_errors(setup_webapp_tools, mocker, side_effect, expected_e
     mocker.patch("tools.webapp.Webapp", autospec=True)
     mocker.patch("tools.webapp.Webapp.list_webapps", side_effect=side_effect)
     
-    with pytest.raises(RuntimeError) as exc:
+    with pytest.raises(ToolError) as exc:
         setup_webapp_tools.call_tool("list_webapps", {})
     assert expected_error in str(exc)
 
@@ -108,7 +109,7 @@ def test_create_webapp_errors(setup_webapp_tools, mocker, side_effect, expected_
         "virtualenv_path": "/test/venv/path",
         "project_path": "/project/path",
     }
-    with pytest.raises(RuntimeError) as exc:
+    with pytest.raises(ToolError) as exc:
         setup_webapp_tools.call_tool("create_webapp", params)
     assert expected_error in str(exc)
 

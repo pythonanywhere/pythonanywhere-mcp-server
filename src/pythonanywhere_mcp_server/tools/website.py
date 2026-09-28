@@ -1,12 +1,13 @@
 from typing import Any
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 
 from pythonanywhere_core.website import Website
 from pythonanywhere_core.base import AuthenticationError, NoTokenError
 
 
-def register_website_tools(mcp: FastMCP) -> None:
+def register_website_tools(mcp: MCPServer) -> None:
     @mcp.tool()
     def reload_website(domain: str) -> str:
         """
@@ -27,9 +28,9 @@ def register_website_tools(mcp: FastMCP) -> None:
             Website().reload(domain)
             return f"Website '{domain}' reloaded."
         except (AuthenticationError, NoTokenError):
-            raise RuntimeError("Authentication failed — check API_TOKEN and domain.")
+            raise ToolError("Authentication failed — check API_TOKEN and domain.")
         except Exception as exc:
-            raise RuntimeError(str(exc)) from exc
+            raise ToolError(str(exc)) from exc
 
     @mcp.tool()
     def list_websites() -> list[dict[str, Any]]:
@@ -50,7 +51,7 @@ def register_website_tools(mcp: FastMCP) -> None:
         try:
             return Website().list()
         except Exception as exc:
-            raise RuntimeError(f"Failed to list websites: {str(exc)}") from exc
+            raise ToolError(f"Failed to list websites: {str(exc)}") from exc
 
     @mcp.tool()
     def create_website(domain_name: str, command: str) -> dict:
@@ -88,7 +89,7 @@ def register_website_tools(mcp: FastMCP) -> None:
         try:
             return Website().create(domain_name, command)
         except Exception as exc:
-            raise RuntimeError(f"Failed to create website: {str(exc)}") from exc
+            raise ToolError(f"Failed to create website: {str(exc)}") from exc
 
     @mcp.tool()
     def delete_website(domain_name: str) -> dict:
@@ -104,4 +105,4 @@ def register_website_tools(mcp: FastMCP) -> None:
         try:
             return Website().delete(domain_name)
         except Exception as exc:
-            raise RuntimeError(f"Failed to delete website: {str(exc)}") from exc
+            raise ToolError(f"Failed to delete website: {str(exc)}") from exc

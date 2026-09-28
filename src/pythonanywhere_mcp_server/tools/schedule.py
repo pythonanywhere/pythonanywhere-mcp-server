@@ -1,9 +1,10 @@
-from mcp.server.fastmcp import FastMCP
+from mcp.server import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 
 from pythonanywhere_core.schedule import Schedule
 
 
-def register_schedule_tools(mcp: FastMCP) -> None:
+def register_schedule_tools(mcp: MCPServer) -> None:
     @mcp.tool()
     def list_scheduled_tasks() -> list[dict]:
         """
@@ -17,7 +18,7 @@ def register_schedule_tools(mcp: FastMCP) -> None:
         try:
             return Schedule().get_list()
         except Exception as exc:
-            raise RuntimeError(f"Failed to list scheduled tasks: {str(exc)}") from exc
+            raise ToolError(f"Failed to list scheduled tasks: {str(exc)}") from exc
 
     @mcp.tool()
     def create_scheduled_task(params: dict) -> dict:
@@ -38,7 +39,7 @@ def register_schedule_tools(mcp: FastMCP) -> None:
         try:
             return Schedule().create(params)
         except Exception as exc:
-            raise RuntimeError(f"Failed to create scheduled task: {str(exc)}") from exc
+            raise ToolError(f"Failed to create scheduled task: {str(exc)}") from exc
 
     @mcp.tool()
     def delete_scheduled_task(task_id: int) -> bool:
@@ -54,7 +55,7 @@ def register_schedule_tools(mcp: FastMCP) -> None:
         try:
             return Schedule().delete(task_id)
         except Exception as exc:
-            raise RuntimeError(f"Failed to delete scheduled task: {str(exc)}") from exc
+            raise ToolError(f"Failed to delete scheduled task: {str(exc)}") from exc
 
     @mcp.tool()
     def get_scheduled_task(task_id: int) -> dict:
@@ -70,7 +71,7 @@ def register_schedule_tools(mcp: FastMCP) -> None:
         try:
             return Schedule().get_specs(task_id)
         except Exception as exc:
-            raise RuntimeError(f"Failed to get scheduled task: {str(exc)}") from exc
+            raise ToolError(f"Failed to get scheduled task: {str(exc)}") from exc
 
     @mcp.tool()
     def update_scheduled_task(task_id: int, params: dict) -> dict:
@@ -88,4 +89,4 @@ def register_schedule_tools(mcp: FastMCP) -> None:
         try:
             return Schedule().update(task_id, params)
         except Exception as exc:
-            raise RuntimeError(f"Failed to update scheduled task: {str(exc)}") from exc
+            raise ToolError(f"Failed to update scheduled task: {str(exc)}") from exc

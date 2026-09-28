@@ -1,6 +1,6 @@
 import os
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server import MCPServer
 from . import __version__
 from .tools.file import register_file_tools
 from .tools.webapp import register_webapp_tools
@@ -17,7 +17,7 @@ def create_server():
     if not API_TOKEN:
         raise RuntimeError("API_TOKEN environment variable must be set.")
 
-    mcp = FastMCP("PythonAnywhere Model Context Protocol Server")
+    mcp = MCPServer("PythonAnywhere Model Context Protocol Server")
 
     register_file_tools(mcp)
     register_website_tools(mcp)

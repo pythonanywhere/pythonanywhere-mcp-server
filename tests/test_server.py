@@ -4,15 +4,15 @@ from pythonanywhere_mcp_server import server
 
 
 @pytest.fixture()
-def mock_FastMCP(mocker):
-    """Mock the FastMCP class to avoid actual server creation."""
-    return mocker.patch("pythonanywhere_mcp_server.server.FastMCP", autospec=True)
+def mock_MCPServer(mocker):
+    """Mock the MCPServer class to avoid actual server creation."""
+    return mocker.patch("pythonanywhere_mcp_server.server.MCPServer", autospec=True)
 
 
-def test_create_server(monkeypatch, mock_FastMCP):
+def test_create_server(monkeypatch, mock_MCPServer):
     monkeypatch.setenv("API_TOKEN", "dummy-token")
     server.create_server()
-    mock_FastMCP.assert_called_once_with("PythonAnywhere Model Context Protocol Server")
+    mock_MCPServer.assert_called_once_with("PythonAnywhere Model Context Protocol Server")
 
 
 @pytest.mark.parametrize(
@@ -23,14 +23,14 @@ def test_create_server(monkeypatch, mock_FastMCP):
         "register_schedule_tools",
     ]
 )
-def test_register_tools(monkeypatch, mocker, mock_FastMCP, register_fn):
+def test_register_tools(monkeypatch, mocker, mock_MCPServer, register_fn):
     monkeypatch.setenv("API_TOKEN", "dummy-token")
     mock_register = mocker.patch(
         f"pythonanywhere_mcp_server.server.{register_fn}" ,
         autospec=True
     )
     server.create_server()
-    mock_register.assert_called_once_with(mock_FastMCP.return_value)
+    mock_register.assert_called_once_with(mock_MCPServer.return_value)
 
 
 def test_missing_api_token(monkeypatch):

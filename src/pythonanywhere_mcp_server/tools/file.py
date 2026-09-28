@@ -1,11 +1,12 @@
 import json
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 
 from pythonanywhere_core.files import Files
 
 
-def register_file_tools(mcp: FastMCP) -> None:
+def register_file_tools(mcp: MCPServer) -> None:
     @mcp.tool()
     def read_file_or_directory(path: str) -> str:
         """
@@ -27,7 +28,7 @@ def register_file_tools(mcp: FastMCP) -> None:
                 return data.decode()
             return json.dumps(data)
         except Exception as exc:
-            raise RuntimeError(f"Failed to read file or directory: {str(exc)}") from exc
+            raise ToolError(f"Failed to read file or directory: {str(exc)}") from exc
 
     @mcp.tool()
     def upload_text_file(dest_path: str, content: str) -> str:
@@ -45,7 +46,7 @@ def register_file_tools(mcp: FastMCP) -> None:
             status = Files().path_post(dest_path, content.encode())
             return f"Uploaded to {dest_path} (HTTP {status})."
         except Exception as exc:
-            raise RuntimeError(f"Failed to upload text file: {str(exc)}") from exc
+            raise ToolError(f"Failed to upload text file: {str(exc)}") from exc
 
     @mcp.tool()
     def upload_directory(local_dir_path: str, remote_dir_path: str) -> str:
@@ -66,7 +67,7 @@ def register_file_tools(mcp: FastMCP) -> None:
             Files().tree_post(local_dir_path, remote_dir_path)
             return f"Uploaded {local_dir_path} to {remote_dir_path}."
         except Exception as exc:
-            raise RuntimeError(f"Failed to upload directory: {str(exc)}") from exc
+            raise ToolError(f"Failed to upload directory: {str(exc)}") from exc
 
     @mcp.tool()
     def delete_path(path: str) -> str:
@@ -83,7 +84,7 @@ def register_file_tools(mcp: FastMCP) -> None:
             Files().path_delete(path)
             return f"Deleted {path}."
         except Exception as exc:
-            raise RuntimeError(f"Failed to delete path: {str(exc)}") from exc
+            raise ToolError(f"Failed to delete path: {str(exc)}") from exc
 
     @mcp.tool()
     def tree(path: str) -> list[str]:
@@ -101,4 +102,4 @@ def register_file_tools(mcp: FastMCP) -> None:
             listing = Files().tree_get(path)
             return listing
         except Exception as exc:
-            raise RuntimeError(f"Failed to get directory tree: {str(exc)}") from exc
+            raise ToolError(f"Failed to get directory tree: {str(exc)}") from exc
