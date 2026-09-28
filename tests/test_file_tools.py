@@ -1,22 +1,32 @@
+import json
+
 import pytest
 
 import tools.file as file_tools
 
 
-def test_read_file_or_directory_file(mcp, mocker):
+@pytest.mark.parametrize("content", ["file contents", 'Café says "hello"\n'])
+def test_read_file_or_directory_file(mcp, mocker, content):
     file_tools.register_file_tools(mcp)
     mock_files = mocker.patch("tools.file.Files", autospec=True)
-    mock_files.return_value.path_get.return_value = b"file contents"
+    mock_files.return_value.path_get.return_value = content.encode("utf-8")
     result = mcp.call_tool("read_file_or_directory", {"path": "/some/file.txt"})
-    assert result == "file contents"
+    assert result == content
 
 
 def test_read_file_or_directory_directory(mcp, mocker):
     file_tools.register_file_tools(mcp)
     mock_files = mocker.patch("tools.file.Files", autospec=True)
-    mock_files.return_value.path_get.return_value = {"listing": ["a", "b"]}
+    listing = {
+        'a "quoted" file.txt': {"type": "file", "url": "/files/quoted"},
+        "café": {"type": "directory", "url": "/files/cafe"},
+    }
+    mock_files.return_value.path_get.return_value = listing
+
     result = mcp.call_tool("read_file_or_directory", {"path": "/some/dir/"})
-    assert result == str({"listing": ["a", "b"]})
+
+    assert json.loads(result) == listing
+    mock_files.return_value.path_get.assert_called_once_with("/some/dir/")
 
 
 def test_upload_text_file(mcp, mocker):

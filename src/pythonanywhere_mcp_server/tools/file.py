@@ -1,3 +1,5 @@
+import json
+
 from mcp.server.fastmcp import FastMCP
 
 from pythonanywhere_core.files import Files
@@ -10,7 +12,8 @@ def register_file_tools(mcp: FastMCP) -> None:
         Return the contents of a file or a directory listing.
 
         If the given path is a file, returns its contents as a string.
-        If the path is a directory, returns a JSON string with its listing (recursively, up to 1000 entries).
+        If the path is a directory, returns a JSON string listing its immediate
+        children, without recursively listing subdirectory contents.
 
         Args:
             path (str): The absolute path to the file or directory.
@@ -22,7 +25,7 @@ def register_file_tools(mcp: FastMCP) -> None:
             data = Files().path_get(path)
             if isinstance(data, (bytes, bytearray)):
                 return data.decode()
-            return str(data)
+            return json.dumps(data)
         except Exception as exc:
             raise RuntimeError(f"Failed to read file or directory: {str(exc)}") from exc
 
