@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from mcp import Client
+from pythonanywhere_core.exceptions import PythonAnywhereApiException
 
 from pythonanywhere_mcp_server.server import create_server
 
@@ -103,6 +104,27 @@ async def test_create_webapp_accepts_nullable_virtualenv(server, mocker, virtual
         project_path=Path("/home/test/project"),
         nuke=False,
     )
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("error_type", [PythonAnywhereApiException, ValueError])
+async def test_patch_error_wire_result_contains_no_secrets(server, mocker, error_type):
+    patch = mocker.patch(
+        "pythonanywhere_mcp_server.tools.webapp.Webapp.patch",
+        side_effect=error_type("sentinel-password sentinel-response"),
+    )
+    data = {"password_protection_password": "sentinel-password"}
+
+    async with Client(server) as client:
+        result = await client.call_tool("patch_webapp", {"domain": "sentinel-domain", "data": data})
+
+    assert result.is_error
+    assert "sentinel" not in result.model_dump_json()
+    assert result.content[0].text == (
+        "Error executing tool patch_webapp: "
+        "Webapp update failed; inspect the configuration before retrying."
+    )
+    patch.assert_called_once_with(data)
 
 
 @pytest.mark.anyio

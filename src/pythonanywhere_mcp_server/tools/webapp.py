@@ -167,8 +167,10 @@ def register_webapp_tools(mcp: MCPServer) -> None:
             return _without_password(result)
         except (AuthenticationError, NoTokenError):
             raise ToolError("Authentication failed — check API_TOKEN and domain.")
-        except Exception as exc:
-            raise ToolError(str(exc)) from exc
+        except Exception:
+            raise ToolError(
+                "Webapp update failed; inspect the configuration before retrying."
+            ) from None
 
     @mcp.tool()
     def list_webapps() -> list:

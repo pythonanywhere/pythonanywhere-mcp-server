@@ -2,7 +2,7 @@ import pytest
 from mcp.server.mcpserver.exceptions import ToolError
 from pathlib import Path
 from pythonanywhere_core.base import AuthenticationError
-from pythonanywhere_core.exceptions import MissingCNAMEException
+from pythonanywhere_core.exceptions import MissingCNAMEException, PythonAnywhereApiException
 
 import tools.webapp as webapp_tools
 
@@ -45,7 +45,7 @@ def test_webapp_tools_success(setup_webapp_tools, mocker, tool_name, method_name
     ("get_webapp_info", "get", {"domain": "test.com"}, AuthenticationError(), "Authentication failed"),
     ("get_webapp_info", "get", {"domain": "test.com"}, Exception("info error"), "info error"),
     ("patch_webapp", "patch", {"domain": "test.com", "data": {"python_version": "3.10"}}, AuthenticationError(), "Authentication failed"),
-    ("patch_webapp", "patch", {"domain": "test.com", "data": {"python_version": "3.10"}}, Exception("patch error"), "patch error"),
+    ("patch_webapp", "patch", {"domain": "test.com", "data": {"python_version": "3.10"}}, Exception("patch error"), "Webapp update failed; inspect the configuration before retrying."),
 ])
 def test_webapp_tools_errors(setup_webapp_tools, mocker, tool_name, method_name, params, side_effect, expected_error):
     mock_webapp = mocker.patch("tools.webapp.Webapp", autospec=True)
@@ -54,6 +54,23 @@ def test_webapp_tools_errors(setup_webapp_tools, mocker, tool_name, method_name,
     with pytest.raises(ToolError) as exc:
         setup_webapp_tools.call_tool(tool_name, params)
     assert expected_error in str(exc)
+
+
+@pytest.mark.parametrize("error_type", [PythonAnywhereApiException, ValueError])
+def test_patch_error_does_not_expose_secrets(setup_webapp_tools, mocker, error_type):
+    webapp = mocker.patch("tools.webapp.Webapp", autospec=True)
+    webapp.return_value.patch.side_effect = error_type("sentinel-password sentinel-response")
+    data = {"password_protection_password": "sentinel-password"}
+
+    with pytest.raises(ToolError) as exc:
+        setup_webapp_tools.call_tool("patch_webapp", {"domain": "sentinel-domain", "data": data})
+
+    assert str(exc.value) == "Webapp update failed; inspect the configuration before retrying."
+    assert exc.value.__cause__ is None
+    assert exc.value.__suppress_context__
+    webapp.assert_called_once_with("sentinel-domain")
+    webapp.return_value.patch.assert_called_once_with({"password_protection_password": "sentinel-password"})
+    assert data == {"password_protection_password": "sentinel-password"}
 
 
 @pytest.mark.parametrize("side_effect,expected_error", [
