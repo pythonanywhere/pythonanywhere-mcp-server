@@ -69,10 +69,10 @@ def test_list_webapps_errors(setup_webapp_tools, mocker, side_effect, expected_e
     assert expected_error in str(exc)
 
 
-def test_create_webapp(setup_webapp_tools, mocker):
+@pytest.mark.parametrize("virtualenv_path", [None, "/test/venv/path"])
+def test_create_webapp(setup_webapp_tools, mocker, virtualenv_path):
     webapp_domain = 'test.com'
     python_version = '3.10'
-    virtualenv_path = Path('/test/venv/path')
     project_path = Path('/project/path')
 
     mock_webapp = mocker.patch("tools.webapp.Webapp", autospec=True)
@@ -88,7 +88,7 @@ def test_create_webapp(setup_webapp_tools, mocker):
     mock_webapp.assert_called_with(webapp_domain)
     mock_webapp.return_value.create.assert_called_with(
         python_version=python_version,
-        virtualenv_path=virtualenv_path,
+        virtualenv_path=Path(virtualenv_path) if virtualenv_path is not None else None,
         project_path=project_path,
         nuke=False
     )

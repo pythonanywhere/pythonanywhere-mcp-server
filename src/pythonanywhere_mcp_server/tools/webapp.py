@@ -43,14 +43,14 @@ def register_webapp_tools(mcp: MCPServer) -> None:
             raise ToolError(str(exc)) from exc
 
     @mcp.tool()
-    def create_webapp(domain: str, python_version: str, virtualenv_path: str, project_path: str) -> str:
+    def create_webapp(domain: str, python_version: str, virtualenv_path: str | None, project_path: str) -> str:
         """
         Create a new uWSGI-based web application for the given domain.
 
         This creates a new webapp on PythonAnywhere with the specified configuration.
         The webapp will be created using the specified Python version, virtual environment,
-        and project path. If a webapp already exists for this domain, it will fail unless
-        the nuke parameter is set to True.
+        and project path. If a webapp already exists for this domain, creation fails;
+        this tool does not replace existing webapps.
 
         The WSGI configuration file can be found in /var/www. The file is of the format:
         domain.replace('.', '_') + '_wsgi.py' It would be automatically created as side effect of running this tool.
@@ -70,7 +70,7 @@ def register_webapp_tools(mcp: MCPServer) -> None:
             str: Status message indicating creation result.
 
         Raises:
-            ToolError: If authentication fails, webapp already exists (and nuke=False),
+            ToolError: If authentication fails, webapp already exists,
                          or other API errors occur. If 403 error is raised, it may mean that there
                          is already a non-uwsgi-based website. `list_websites` tool can be used to check that.
         """
@@ -78,7 +78,7 @@ def register_webapp_tools(mcp: MCPServer) -> None:
             webapp = Webapp(domain)
             webapp.create(
                 python_version=python_version,
-                virtualenv_path=Path(virtualenv_path),
+                virtualenv_path=Path(virtualenv_path) if virtualenv_path is not None else None,
                 project_path=Path(project_path),
                 nuke=False
             )

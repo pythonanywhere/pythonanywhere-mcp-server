@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from mcp import Client
@@ -66,6 +68,41 @@ async def test_webapp_password_is_absent_from_wire_result(
     assert "test.com" in serialised
     assert "sentinel-secret" not in serialised
     assert "password_protection_password" not in serialised
+
+
+@pytest.mark.anyio
+async def test_create_webapp_schema_requires_nullable_virtualenv(server):
+    async with Client(server) as client:
+        result = await client.list_tools()
+
+    tool = next(tool for tool in result.tools if tool.name == "create_webapp")
+    schema = tool.input_schema
+    assert "virtualenv_path" in schema["required"]
+    assert {option["type"] for option in schema["properties"]["virtualenv_path"]["anyOf"]} == {
+        "string", "null"
+    }
+    assert "nuke" not in tool.description
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("virtualenv_path", [None, "/home/test/venv"])
+async def test_create_webapp_accepts_nullable_virtualenv(server, mocker, virtualenv_path):
+    create = mocker.patch("pythonanywhere_mcp_server.tools.webapp.Webapp.create")
+    async with Client(server) as client:
+        result = await client.call_tool("create_webapp", {
+            "domain": "test.com",
+            "python_version": "3.10",
+            "virtualenv_path": virtualenv_path,
+            "project_path": "/home/test/project",
+        })
+
+    assert not result.is_error
+    create.assert_called_once_with(
+        python_version="3.10",
+        virtualenv_path=Path(virtualenv_path) if virtualenv_path is not None else None,
+        project_path=Path("/home/test/project"),
+        nuke=False,
+    )
 
 
 @pytest.mark.anyio
