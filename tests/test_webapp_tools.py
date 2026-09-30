@@ -114,6 +114,46 @@ def test_create_webapp_errors(setup_webapp_tools, mocker, side_effect, expected_
     assert expected_error in str(exc)
 
 
+@pytest.mark.parametrize("tool_name,method_name", [
+    ("get_webapp_info", "get"),
+    ("list_webapps", "list_webapps"),
+    ("patch_webapp", "patch"),
+])
+@pytest.mark.parametrize("has_password", [False, True])
+def test_webapp_results_omit_password_without_mutating_input(
+    setup_webapp_tools, mocker, tool_name, method_name, has_password
+):
+    safe = {"domain_name": "test.com", "password_protection_enabled": True}
+    original = dict(safe)
+    if has_password:
+        original["password_protection_password"] = "sentinel-secret"
+    snapshot = dict(original)
+    webapp = mocker.patch("tools.webapp.Webapp", autospec=True)
+    is_list = tool_name == "list_webapps"
+    method = getattr(webapp if is_list else webapp.return_value, method_name)
+    method.return_value = [original, dict(original)] if is_list else original
+    params = {} if is_list else {"domain": "test.com"}
+    patch_data = {"password_protection_password": "new-secret"}
+    if tool_name == "patch_webapp":
+        params["data"] = patch_data
+
+    result = setup_webapp_tools.call_tool(tool_name, params)
+
+    assert result == ([safe, safe] if is_list else safe)
+    assert original == snapshot
+    if is_list:
+        assert method.return_value == [snapshot, snapshot]
+    if tool_name == "patch_webapp":
+        method.assert_called_once_with({"password_protection_password": "new-secret"})
+        assert patch_data == {"password_protection_password": "new-secret"}
+
+
+def test_list_webapps_empty(setup_webapp_tools, mocker):
+    mocker.patch("tools.webapp.Webapp.list_webapps", return_value=[])
+
+    assert setup_webapp_tools.call_tool("list_webapps", {}) == []
+
+
 def test_list_webapps(setup_webapp_tools, mocker):
     mocker.patch("tools.webapp.Webapp", autospec=True)
     expected = [{"domain_name": "test.com", "python_version": "3.10"}]

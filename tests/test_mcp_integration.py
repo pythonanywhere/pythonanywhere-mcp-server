@@ -44,6 +44,31 @@ async def test_server_exposes_expected_tools(server):
 
 
 @pytest.mark.anyio
+@pytest.mark.parametrize("tool_name,method_name,arguments", [
+    ("get_webapp_info", "get", {"domain": "test.com"}),
+    ("list_webapps", "list_webapps", {}),
+    ("patch_webapp", "patch", {"domain": "test.com", "data": {"force_https": True}}),
+])
+async def test_webapp_password_is_absent_from_wire_result(
+    server, mocker, tool_name, method_name, arguments
+):
+    config = {"domain_name": "test.com", "password_protection_password": "sentinel-secret"}
+    mocker.patch(
+        f"pythonanywhere_mcp_server.tools.webapp.Webapp.{method_name}",
+        return_value=[config] if tool_name == "list_webapps" else config,
+    )
+
+    async with Client(server) as client:
+        result = await client.call_tool(tool_name, arguments)
+
+    assert not result.is_error
+    serialised = result.model_dump_json()
+    assert "test.com" in serialised
+    assert "sentinel-secret" not in serialised
+    assert "password_protection_password" not in serialised
+
+
+@pytest.mark.anyio
 async def test_api_failure_is_returned_as_actionable_tool_error(server, mocker):
     mocker.patch(
         "pythonanywhere_mcp_server.tools.schedule.Schedule.get_list",

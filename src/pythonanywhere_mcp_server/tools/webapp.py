@@ -10,6 +10,11 @@ from pythonanywhere_core.exceptions import MissingCNAMEException
 # ToDo: Add the log file functions once pythonanywhere-core webapp log file functions
 # have been improved
 
+def _without_password(config: dict) -> dict:
+    """Omit the basic-auth password from a successful configuration result."""
+    return {key: value for key, value in config.items() if key != "password_protection_password"}
+
+
 def register_webapp_tools(mcp: MCPServer) -> None:
     @mcp.tool()
     def reload_webapp(domain: str) -> str:
@@ -151,8 +156,7 @@ def register_webapp_tools(mcp: MCPServer) -> None:
                     "expiry": "2025-10-16",
                     "force_https": False,
                     "password_protection_enabled": False,
-                    "password_protection_username": "foo",
-                    "password_protection_password": "bar"
+                    "password_protection_username": "foo"
                 }
 
         Raises:
@@ -160,7 +164,7 @@ def register_webapp_tools(mcp: MCPServer) -> None:
         """
         try:
             result = Webapp(domain).patch(data)
-            return result
+            return _without_password(result)
         except (AuthenticationError, NoTokenError):
             raise ToolError("Authentication failed — check API_TOKEN and domain.")
         except Exception as exc:
@@ -191,7 +195,7 @@ def register_webapp_tools(mcp: MCPServer) -> None:
         """
         try:
             result = Webapp.list_webapps()
-            return result
+            return [_without_password(config) for config in result]
         except (AuthenticationError, NoTokenError):
             raise ToolError("Authentication failed — check API_TOKEN.")
         except Exception as exc:
@@ -223,7 +227,6 @@ def register_webapp_tools(mcp: MCPServer) -> None:
                   - "force_https": bool,  # Whether HTTPS is enforced
                   - "password_protection_enabled": bool,  # Whether password protection is enabled
                   - "password_protection_username": str,  # Username for password-protected access
-                  - "password_protection_password": str   # Password for password-protected access
 
 
         Raises:
@@ -231,7 +234,7 @@ def register_webapp_tools(mcp: MCPServer) -> None:
         """
         try:
             result = Webapp(domain).get()
-            return result
+            return _without_password(result)
         except (AuthenticationError, NoTokenError):
             raise ToolError("Authentication failed — check API_TOKEN and domain.")
         except Exception as exc:
